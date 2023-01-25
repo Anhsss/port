@@ -1,0 +1,109 @@
+--레코드 늘리기
+alter table [테이블명] MAX_ROWS=1000000 AVG_ROW_LENGTH=21474;
+
+--외래키 삭제
+alter table [테이블명] drop foreign key [제약조건명];
+
+-- 위도,경도 좌표간의 거리 구하기
+SELECT 가져올컬럼,
+
+(6371 * acos(cos(radians(lat좌표값)) * cos(radians(slLat)) * cos(radians(slLng) - radians(lng좌표값)) +
+
+sin(radians( lat좌표값)) * sin(radians(slLat))))
+
+AS distance
+
+FROM 대상테이블
+
+HAVING distance <= 거리
+
+ORDER BY distance 
+
+LIMIT 0,1000
+
+① 내부 조인 (Inner Join)
+1)
+SELECT 조회할 컬럼
+FROM 테이블1, 테이블2
+[WHERE 조건문]
+
+② 자연 조인 (Natural Join)
+SELECT 조회할 컬럼
+FROM 테이블1
+NATURAL JOIN 테이블2
+[WHERE 조건문]
+
+2)
+SELECT 조회할 컬럼
+FROM 테이블1
+(INNER) JOIN 테이블2
+ON 테이블1.컬럼 = 테이블2.컬럼
+[WHERE 추가조건]
+
+③  전체 외부 조인 (Full Outer Join)
+SELECT 조회할 컬럼
+FROM 테이블1 
+FULL OUTER JOIN 테이블2
+ON 조건문
+[WHERE 추가조건문]
+
+④ Left Outer Join
+SELECT 조회할 컬럼
+FROM 기준테이블1 
+LEFT OUTER JOIN 테이블2
+ON 조건문
+[WHERE 추가조건문]
+
+⑤ Right Join
+SELECT 조회할 컬럼
+FROM 테이블1 
+RIGHT OUTER JOIN 기준테이블2
+ON 조건문
+[WHERE 추가조건문]
+
+⑥ Cross Join
+1)
+SELECT 조회할컬럼
+FROM 테이블1, 테이블2
+
+2)
+SELECT 조회할컬럼
+FROM 테이블1
+JOIN 테이블2
+
+3)
+SELECT 조회할컬럼
+FROM 테이블1
+CROSS JOIN 테이블2
+
+-프로시저
+CREATE PROCEDURE `PROC_TEST` (
+    PARAM_NAME VARCHAR(20) -- 파라미터 선언
+    , PARAM_AGE INTEGER
+)
+BEGIN
+    DECLARE PARAM_NUM INTEGER; -- 변수 선언
+    
+    SELECT COUNT(*) + 1
+      INTO PARAM_NUM -- 변수에 값 할당
+      FROM TB1;
+    
+    -- INSERT 문 수행
+    INSERT INTO TB1(NUM, NAME, AGE) VALUES(PARAM_NUM, PARAM_NAME, PARAM_AGE);
+END
+
+-- GROUP BY 예제
+  SELECT NAME, COUNTRYCODE, AVG(POPULATION)
+    FROM CITY
+GROUP BY COUNTRYCODE
+  
+-- HAVING 예제
+  SELECT NAME, COUNTRYCODE, AVG(POPULATION)
+    FROM CITY
+GROUP BY COUNTRYCODE
+  HAVING AVG(POPULATION) > 500000
+
+참고 https://doh-an.tistory.com/30
+https://melonicedlatte.com/database/2017/02/16/174901.html
+https://wakestand.tistory.com/518
+https://wakestand.tistory.com/521
